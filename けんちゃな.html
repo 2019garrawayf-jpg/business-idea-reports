@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garraway F 参加チケットのはなし - Garraway F ビジネスアイデア分析レポート</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f7f9fc;
+            --card-bg: #ffffff;
+            --primary-text: #4a4a4a;
+            --heading-text: #2c3e50;
+            --accent-color-1: #a2d2ff;
+            --accent-color-2: #bde0fe;
+            --accent-color-3: #ffafcc;
+            --accent-color-4: #ffc8dd;
+            --accent-color-5: #cdb4db;
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+            --border-radius: 15px;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, var(--accent-color-1), var(--accent-color-3));
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        section {
+            padding: 60px 20px;
+            margin-bottom: 30px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--heading-text);
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color-2), var(--accent-color-4));
+            border-radius: 2px;
+        }
+        
+        .section-intro {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 50px auto;
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        #ideaChart {
+            max-width: 400px;
+            max-height: 400px;
+        }
+        
+        .total-ideas {
+            text-align: center;
+        }
+
+        .total-ideas .count {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--heading-text);
+            display: block;
+        }
+
+        .total-ideas .label {
+            font-size: 1.2rem;
+            color: var(--primary-text);
+        }
+
+        .keyword-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .keyword-card {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            border: 1px solid #eef2f7;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .keyword-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        }
+
+        .keyword-card h3 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            color: var(--heading-text);
+            display: flex;
+            align-items: center;
+        }
+        
+        .keyword-card h3 .icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .keyword-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .keyword-card li {
+            background-color: var(--bg-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-weight: 400;
+            color: var(--primary-text);
+            border-left: 4px solid;
+        }
+        
+        .card-1 li { border-color: #6fa8dc; } /* 人口減少 */
+        .card-2 li { border-color: #ffd966; } /* 高齢化社会 */
+        .card-3 li { border-color: #a6d854; } /* 教育改革 */
+        .card-4 li { border-color: #e5c494; } /* 過疎化 */
+        .card-5 li { border-color: #b3b3b3; } /* 安全保障 */
+        .card-6 li { border-color: #8da0cb; } /* 経済成長 */
+        .card-7 li { border-color: #fc8d62; } /* 日本文化 */
+        .card-8 li { border-color: #e78ac3; } /* 移動の問題 */
+        
+        .overlap-section {
+            text-align: center;
+        }
+        
+        .overlap-keywords {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .overlap-keyword {
+            background: linear-gradient(135deg, var(--accent-color-2), var(--accent-color-5));
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .analysis-card {
+            background-color: var(--bg-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+        }
+
+        .analysis-card h3 {
+            margin-top: 0;
+            color: var(--heading-text);
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .analysis-card ul {
+            padding-left: 20px;
+        }
+        
+        .insight {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-top: 40px;
+            text-align: center;
+            border: 2px dashed var(--accent-color-1);
+        }
+
+        .insight p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* --- Styles for Top Ideas Section --- */
+        .top-ideas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .idea-card {
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            border-left: 8px solid #ccc;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .idea-card:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        }
+        
+        .idea-card.color-jinko { border-color: #6fa8dc; }
+        .idea-card.color-kourei { border-color: #ffd966; }
+        .idea-card.color-kyouiku { border-color: #a6d854; }
+        .idea-card.color-kaso { border-color: #e5c494; }
+        .idea-card.color-anzen { border-color: #b3b3b3; }
+        .idea-card.color-keizai { border-color: #8da0cb; }
+        .idea-card.color-bunka { border-color: #fc8d62; }
+        .idea-card.color-ido { border-color: #e78ac3; }
+
+        .idea-card h3 {
+            font-size: 1.4rem;
+            color: var(--heading-text);
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+        }
+        
+        .idea-card .idea-text {
+            font-weight: 700;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            color: var(--heading-text);
+            line-height: 1.6;
+        }
+        
+        .idea-card .comment {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #eef2f7;
+            font-size: 0.95rem;
+            color: #6c757d;
+        }
+
+        .score-chart {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .score-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .score-chart-label {
+            width: 110px; 
+            text-align: left;
+            padding-right: 10px;
+            color: var(--primary-text);
+        }
+
+        .bar-container {
+            flex-grow: 1;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            height: 18px;
+            overflow: hidden;
+        }
+
+        .bar-value {
+            height: 100%;
+            border-radius: 5px 0 0 5px;
+            transition: width 0.8s ease-in-out;
+            text-align: right;
+            color: white;
+            font-size: 0.8rem;
+            line-height: 18px;
+            padding-right: 5px;
+            box-sizing: border-box;
+        }
+        
+        .bar-color-jinko { background-color: #6fa8dc; }
+        .bar-color-kourei { background-color: #ffd966; }
+        .bar-color-kyouiku { background-color: #a6d854; }
+        .bar-color-kaso { background-color: #e5c494; }
+        .bar-color-anzen { background-color: #b3b3b3; }
+        .bar-color-keizai { background-color: #8da0cb; }
+        .bar-color-bunka { background-color: #fc8d62; }
+        .bar-color-ido { background-color: #e78ac3; }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Garraway F 参加チケットのはなし</h1>
+        <p>Garraway F ビジネスアイデア分析レポート</p>
+    </header>
+
+    <div class="container">
+
+        <section>
+            <div style="text-align: center;"><h2>Garraway Fに集まった沢山のアイデア</h2></div>
+            <p class="section-intro">
+                Garraway Fに入場する際、皆様には参加チケットに社会課題を解決するビジネスアイデアを記入していただいています。このチケットを通じてお寄せいただいたアイデアは、現在総数4,491件にものぼっています。一体どのような社会課題に、どのようなアイデアが集まったのでしょうか。一緒に見ていきましょう。
+            </p>
+            <div class="chart-container">
+                <div class="total-ideas">
+                    <span class="label">寄せられたアイデア総数</span>
+                    <span class="count">4,491</span>
+                </div>
+                <canvas id="ideaChart"></canvas>
+            </div>
+        </section>
+
+        <section>
+            <div style="text-align: center;"><h2>社会問題別　頻出ワード５選</h2></div>
+            <p class="section-intro">
+                参加チケットに書かれるアイデアには、実はそれぞれに「よく出てくる単語」が存在します。ここでは、そんな頻出キーワードを社会課題ごとにご紹介します。単語をたどっていくと、その課題ならではの特徴や姿が浮かび上がってきます。
+            </p>
+            <div class="keyword-grid">
+                <div class="keyword-card card-1">
+                    <h3><span class="icon">💡</span>① 人口減少</h3>
+                    <ul><li>子供</li><li>子育て</li><li>支援</li><li>家族</li><li>所得</li></ul>
+                </div>
+                <div class="keyword-card card-2">
+                    <h3><span class="icon">💡</span>② 高齢化社会</h3>
+                    <ul><li>高齢者</li><li>介護</li><li>健康</li><li>孤独</li><li>活用</li></ul>
+                </div>
+                <div class="keyword-card card-3">
+                    <h3><span class="icon">💡</span>③ 教育改革</h3>
+                    <ul><li>教育</li><li>学校</li><li>学ぶ</li><li>学生</li><li>スキル</li></ul>
+                </div>
+                 <div class="keyword-card card-4">
+                    <h3><span class="icon">💡</span>④ 過疎化</h3>
+                    <ul><li>地方</li><li>観光</li><li>活性化</li><li>移住</li><li>交流</li></ul>
+                </div>
+                <div class="keyword-card card-5">
+                    <h3><span class="icon">💡</span>⑤ 安全保障</h3>
+                    <ul><li>ドローン</li><li>防災</li><li>食料</li><li>システム</li><li>犯罪</li></ul>
+                </div>
+                <div class="keyword-card card-6">
+                    <h3><span class="icon">💡</span>⑥ 経済成長</h3>
+                    <ul><li>経済</li><li>投資</li><li>起業</li><li>市場</li><li>労働</li></ul>
+                </div>
+                <div class="keyword-card card-7">
+                    <h3><span class="icon">💡</span>⑦ 日本文化・伝統の保護</h3>
+                    <ul><li>文化</li><li>伝統</li><li>保護</li><li>職人</li><li>歴史</li></ul>
+                </div>
+                <div class="keyword-card card-8">
+                    <h3><span class="icon">💡</span>⑧ 移動の問題</h3>
+                    <ul><li>交通</li><li>自動運転</li><li>交通弱者</li><li>物流</li><li>MaaS</li></ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="overlap-section">
+            <div style="text-align: center;"><h2>社会課題を超えて共通するキーワードたち</h2></div>
+             <p class="section-intro">
+                一見すると異なる社会課題。でも、その解決策を探るアイデアには、共通する単語がありました。
+                分野を横断して現れるこれらのキーワードは、これからの社会を考える上での大切なヒントかもしれません。
+            </p>
+             <div class="overlap-keywords">
+                <span class="overlap-keyword">企業</span>
+                <span class="overlap-keyword">地域</span>
+                <span class="overlap-keyword">AI</span>
+                <span class="overlap-keyword">日本</span>
+             </div>
+             <p style="margin-top: 30px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                多くのアイデアに共通しているのは、課題解決の舞台を身近な「地域」に据え、「AI」などのテクノロジーを駆使して、「日本」の未来をより良くしようという前向きな視点です。
+             </p>
+        </section>
+
+        <section>
+            <div style="text-align: center;"><h2>AIが選出 ビジネスアイデア集</h2></div>
+            <p class="section-intro">
+                数多くのアイデアをAIに評価させ、その結果、特に高い評価を得たものをカテゴリごとに2つずつ抽出しました。評価は「社会的インパクト」「実現可能性」「独自性」「解決力」「シナジー」の5つの観点に基づいて行われています。
+            </p>
+            <div class="top-ideas-grid">
+                
+                <!-- ①人口減少 -->
+                <div class="idea-card color-jinko">
+                    <h3>① 人口減少</h3>
+                    <p class="idea-text">AI・IoT技術を活用したスマート介護システムを開発し、介護現場の人手不足解消と高齢者の自立支援を実現する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-jinko" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-jinko" style="width: 60%;">3</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-jinko" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-jinko" style="width: 60%;">3</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-jinko" style="width: 20%;">1</div></div></div>
+                    </div>
+                    <p class="comment">労働力不足という課題に対し、テクノロジーで直接的にアプローチする有効なアイデアです。介護の質の向上と、介護者の負担軽減の両立が期待できます。</p>
+                </div>
+                <div class="idea-card color-jinko">
+                    <h3>① 人口減少</h3>
+                    <p class="idea-text">農業分野の人手不足を解消するため、意欲ある留学生と国内農家を繋ぐマッチングプラットフォームを構築・提供する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-jinko" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-jinko" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-jinko" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-jinko" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-jinko" style="width: 60%;">3</div></div></div>
+                    </div>
+                    <p class="comment">人手不足の農業と、意欲ある留学生を結びつけることで、複数の課題を同時に解決する可能性を秘めています。地域経済の活性化にも繋がる良い視点です。</p>
+                </div>
+
+                <!-- ②高齢化社会 -->
+                <div class="idea-card color-kourei">
+                    <h3>② 高齢化社会</h3>
+                    <p class="idea-text">シニア層の健康寿命延伸と社会参加を促すため、短時間から就労可能な軽作業のマッチングサービスを展開する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-kourei" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-kourei" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-kourei" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-kourei" style="width: 60%;">3</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-kourei" style="width: 40%;">2</div></div></div>
+                    </div>
+                    <p class="comment">高齢者の生きがい創出と労働力不足という2つの課題に同時にアプローチする、効果的なアイデアです。地域企業との連携が、事業成功の鍵となりそうです。</p>
+                </div>
+                <div class="idea-card color-kourei">
+                    <h3>② 高齢化社会</h3>
+                    <p class="idea-text">介護現場の深刻な人手不足に対応するため、AIを搭載した介護支援ロボットを開発し、施設や在宅介護の現場に導入する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-kourei" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-kourei" style="width: 60%;">3</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-kourei" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-kourei" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-kourei" style="width: 20%;">1</div></div></div>
+                    </div>
+                    <p class="comment">介護現場の人手不足という深刻な問題に対し、テクノロジーで解決しようとする具体的な提案です。人とロボットが協働する未来の介護の形を示唆しています。</p>
+                </div>
+
+                <!-- ③教育改革 -->
+                <div class="idea-card color-kyouiku">
+                    <h3>③ 教育改革</h3>
+                    <p class="idea-text">AIによる個別最適化された英会話学習アプリを開発し、全国の教育機関に導入することで、実践的なスピーキング能力の向上を目指す。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-kyouiku" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-kyouiku" style="width: 60%;">3</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-kyouiku" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-kyouiku" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-kyouiku" style="width: 40%;">2</div></div></div>
+                    </div>
+                    <p class="comment">AIの得意分野である個別最適化を活かし、スピーキング能力の向上という日本の英語教育の課題に挑むアイデアです。教育格差の是正にも貢献できる可能性があります。</p>
+                </div>
+                <div class="idea-card color-kyouiku">
+                    <h3>③ 教育改革</h3>
+                    <p class="idea-text">子供たちが未来の社会課題を体験的に学べるよう、メタバース空間を活用した教育プログラムを開発し、提供する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-kyouiku" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-kyouiku" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-kyouiku" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-kyouiku" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-kyouiku" style="width: 40%;">2</div></div></div>
+                    </div>
+                    <p class="comment">仮想空間での体験を通じて、子供たちの創造力や社会性を育むという先進的な教育アプローチです。楽しみながら未来について考えるきっかけを提供します。</p>
+                </div>
+
+                 <!-- ④過疎化 -->
+                <div class="idea-card color-kaso">
+                    <h3>④ 過疎化</h3>
+                    <p class="idea-text">リモートワーカーの地方移住を促進するため、自治体や地元企業と連携し、住居・仕事・子育て支援を一体化した「お試し移住パッケージ」を企画・提供する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-kaso" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-kaso" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-kaso" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-kaso" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-kaso" style="width: 60%;">3</div></div></div>
+                    </div>
+                     <p class="comment">移住のハードルを「パッケージ化」によって下げるという、具体的で現実的な解決策です。自治体や企業との連携が鍵となり、関係人口の創出に繋がります。</p>
+                </div>
+                <div class="idea-card color-kaso">
+                    <h3>④ 過疎化</h3>
+                    <p class="idea-text">企業の地方拠点設立を総合的に支援するコンサルティングサービス。物件選定から従業員の住居確保、地域コミュニティとの連携までをサポートし、過疎化問題の解決に貢献する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-kaso" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-kaso" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-kaso" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-kaso" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-kaso" style="width: 40%;">2</div></div></div>
+                    </div>
+                    <p class="comment">企業の地方移転は、雇用の創出や地域経済への貢献度が非常に大きい、インパクトのある提案です。働き方の多様化という現代の流れとも合致しています。</p>
+                </div>
+
+                 <!-- ⑤安全保障 -->
+                <div class="idea-card color-anzen">
+                    <h3>⑤ 安全保障</h3>
+                    <p class="idea-text">AIの画像解析技術を用いた、次世代型防犯カメラシステムの開発。地域の安全・安心なまちづくりに貢献する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-anzen" style="width: 60%;">3</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-anzen" style="width: 60%;">3</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-anzen" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-anzen" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-anzen" style="width: 40%;">2</div></div></div>
+                    </div>
+                    <p class="comment">AIの画像認識技術を活用した地域の安全を守る具体的な提案です。プライバシーへの配慮と両立させることが、実現への鍵となります。</p>
+                </div>
+                <div class="idea-card color-anzen">
+                    <h3>⑤ 安全保障</h3>
+                    <p class="idea-text">従来の印鑑や署名に代わる、安全で利便性の高いデジタル認証アプリを開発・提供し、社会全体のセキュリティ基盤を強化する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-anzen" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-anzen" style="width: 60%;">3</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-anzen" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-anzen" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-anzen" style="width: 20%;">1</div></div></div>
+                    </div>
+                    <p class="comment">「安全保障」を「サイバーセキュリティ」の観点から捉え、デジタル社会における「個人の認証」という根本的な安全保障を強化するアイデアです。実現すれば、社会全体の効率化と安全性向上に大きく貢献します。</p>
+                </div>
+
+                 <!-- ⑥経済成長 -->
+                <div class="idea-card color-keizai">
+                    <h3>⑥ 経済成長</h3>
+                    <p class="idea-text">将来の日本経済を担う若手起業家を育成するため、学生と企業を結びつけるオンラインコミュニティを創設。共同事業やメンタリングの機会を提供する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-keizai" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-keizai" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-keizai" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-keizai" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-keizai" style="width: 60%;">3</div></div></div>
+                    </div>
+                    <p class="comment">未来の経済を担う若者の起業家精神を育む、投資対効果の高いアイデアです。学生、企業、社会の三方良しとなる可能性を秘めています。</p>
+                </div>
+                <div class="idea-card color-keizai">
+                    <h3>⑥ 経済成長</h3>
+                    <p class="idea-text">日本の半導体産業の国際競争力を高めるため、特定地域を拠点とした人材育成プログラムを企画。教育機関や海外企業と連携し、専門人材を育成する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-keizai" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-keizai" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-keizai" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-keizai" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-keizai" style="width: 60%;">3</div></div></div>
+                    </div>
+                    <p class="comment">日本の経済成長の鍵となる半導体産業に焦点を当てた、戦略的で時流を捉えた提案です。地域と連携した長期的な人材育成の視点が素晴らしいです。</p>
+                </div>
+
+                 <!-- ⑦日本文化・伝統の保護 -->
+                <div class="idea-card color-bunka">
+                    <h3>⑦ 日本文化・伝統の保護</h3>
+                    <p class="idea-text">最新のVR・AI技術を活用し、伝統工芸の魅力を国内外に発信するデジタル体験コンテンツを制作。文化の継承と新たなファン獲得を目指す。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-bunka" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-bunka" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-bunka" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-bunka" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-bunka" style="width: 20%;">1</div></div></div>
+                    </div>
+                    <p class="comment">伝統文化と最新技術を融合させ、新しい体験価値を創出しようとする面白い試みです。ゲーム感覚で文化に触れることで、若者層への訴求が期待できます。</p>
+                </div>
+                <div class="idea-card color-bunka">
+                    <h3>⑦ 日本文化・伝統の保護</h3>
+                    <p class="idea-text">日本の伝統音楽の魅力を世界に届けるため、大手音楽ストリーミングサービスと提携し、専門チャンネルの開設やプレイリストのキュレーションを行う。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-bunka" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-bunka" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-bunka" style="width: 60%;">3</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-bunka" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-bunka" style="width: 20%;">1</div></div></div>
+                    </div>
+                    <p class="comment">既存のグローバルなプラットフォームを活用することで、日本の伝統音楽を世界に届けるという、現実的で効果的なアイデアです。文化の新しいファンを獲得するきっかけになりそうです。</p>
+                </div>
+
+                <!-- ⑧移動の問題 -->
+                <div class="idea-card color-ido">
+                    <h3>⑧ 移動の問題</h3>
+                    <p class="idea-text">交通弱者が暮らす過疎地域向けに、自動運転技術を活用したオンデマンド交通システムを開発。地域の交通事業者と連携し、持続可能な移動手段を提供する。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-ido" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-ido" style="width: 40%;">2</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-ido" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-ido" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-ido" style="width: 40%;">2</div></div></div>
+                    </div>
+                    <p class="comment">交通弱者の問題は、地域の活気と直結する重要な課題です。自動運転技術をその解決策として捉え、地域貢献を目指す視点が評価できます。</p>
+                </div>
+                <div class="idea-card color-ido">
+                    <h3>⑧ 移動の問題</h3>
+                    <p class="idea-text">地域の移動課題を住民自身が解決する「コミュニティ型交通サービス」の立ち上げを支援。自治体や企業と連携し、事業モデルの構築から運営までをサポートする。</p>
+                    <div class="score-chart">
+                        <div class="score-row"><span class="score-chart-label">社会的インパクト</span><div class="bar-container"><div class="bar-value bar-color-ido" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">実現可能性</span><div class="bar-container"><div class="bar-value bar-color-ido" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">独自性</span><div class="bar-container"><div class="bar-value bar-color-ido" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">解決力</span><div class="bar-container"><div class="bar-value bar-color-ido" style="width: 20%;">1</div></div></div>
+                        <div class="score-row"><span class="score-chart-label">シナジー</span><div class="bar-container"><div class="bar-value bar-color-ido" style="width: 80%;">4</div></div></div>
+                    </div>
+                    <p class="comment">地域住民が主体となって交通問題を解決する、コミュニティ主導型の素晴らしいモデルです。移動手段の確保と地域経済の循環を両立させています。</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section>
+            <div style="text-align: center;"><h2>アイデアのカタチとテクノロジーへの眼差し</h2></div>
+            <p class="section-intro">
+                アイデアはどんな「カタチ」で生まれ、新しい技術とどう向き合おうとしているのでしょうか。
+                ここからは、アイデアの傾向と、未来を創るテクノロジーへの期待と少しの不安を見ていきます。
+            </p>
+             <div class="analysis-grid">
+                <div class="analysis-card">
+                    <h3>アイデアの類型化</h3>
+                    <p>ほとんどのアイデアは、モノを作る「製品開発型」や仕組みを作る「プラットフォーム型」よりも、人の役に立つことを直接行う**「サービス提供型」**が中心でした。これは、課題解決が、誰かの困りごとに寄り添うことから始まる、という温かい視点を反映しているようです。</p>
+                </div>
+                 <div class="analysis-card">
+                    <h3>テクノロジーに対する認識</h3>
+                    <p>AIやドローンといった技術には、多くの期待が寄せられています。</p>
+                    <ul>
+                        <li><strong>期待😊:</strong> 人手不足の解消、作業の効率化、新しいサービスの創出など、ポジティブな活用法が数多く提案されています。</li>
+                        <li><strong>懸念🤔:</strong> 一方で、文化や伝統、安全を守る分野では、技術が仕事を奪う可能性や、デジタル格差が生まれることへの慎重な意見も見られました。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+             <div style="text-align: center;"><h2>参加チケットが私たちに教えてくれたこと</h2></div>
+             <div class="insight">
+                <p>
+                    今回寄せられた4,491件のアイデアは、Garraway Fにとってかけがえのない財産です。参加チケットを通じて、私たちは社会が抱える課題や現状を垣間見ることができました。ここにある一つひとつのアイデアは、やがて芽吹き、未来を支える大きな樹へと育っていくかもしれません。Garraway Fは、その可能性を信じています。
+                </p>
+             </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; Garraway F</p>
+    </footer>
+
+    <script>
+        const ctx = document.getElementById('ideaChart').getContext('2d');
+        const ideaChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['教育改革', '経済成長', '日本文化・伝統の保護', '過疎化', '人口減少', '移動の問題', '高齢化社会', '安全保障'],
+                datasets: [{
+                    label: 'ビジネスアイデア件数',
+                    data: [977, 662, 619, 529, 520, 498, 467, 219],
+                    backgroundColor: [
+                        '#a6d854', // 教育改革
+                        '#8da0cb', // 経済成長
+                        '#fc8d62', // 日本文化
+                        '#e5c494', // 過疎化
+                        '#6fa8dc', // 人口減少
+                        '#e78ac3', // 移動の問題
+                        '#ffd966', // 高齢化社会
+                        '#b3b3b3'  // 安全保障
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: "'Noto Sans JP', sans-serif",
+                                size: 14
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                    const percentage = (context.parsed / total * 100).toFixed(1);
+                                    label += context.raw + '件 (' + percentage + '%)';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
+
